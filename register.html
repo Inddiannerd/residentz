@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Society - Greenview Residency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+       
+        nav {
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(to right, #030303fd, #1a1a1a);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            margin: 0 0.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background: linear-gradient(135deg, #4003f8, #00b7ff);
+            transform: translateY(-2px);
+        }
+
+        .registration-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-left: 4px solid #4003f8;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input, 
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #916E80;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #4003f8;
+            box-shadow: 0 0 0 2px rgba(64, 3, 248, 0.1);
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row > div {
+            flex: 1;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4003f8, #00b7ff);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(-135deg, #4003f8, #00b7ff);
+            transform: translateY(-2px);
+        }
+
+        .required::after {
+            content: "*";
+            color: #916E80;
+            margin-left: 4px;
+        }
+
+        .error-message {
+            color: #916E80;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        .success-message {
+            background: #80916E;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <nav>
+       <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="registration-container">
+        <form id="societyRegistrationForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">Society Name</label>
+                    <input type="text" id="societyName" required>
+                </div>
+                <div class="form-group">
+                    <label class="required">Registration Number</label>
+                    <input type="text" id="regNumber" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Society Address</label>
+                <textarea id="address" rows="3" required></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">City</label>
+                    <input type="text" id="city" required>
+                </div>
+                <div class="form-group">
+                    <label class="required">State</label>
+                    <input type="text" id="state" required>
+                </div>
+                <div class="form-group">
+                    <label class="required">PIN Code</label>
+                    <input type="text" id="pincode" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">Number of Units</label>
+                    <input type="number" id="units" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label class="required">Year of Establishment</label>
+                    <input type="number" id="establishmentYear" min="1900" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Society Type</label>
+                <select id="societyType" required>
+                    <option value="">Select Type</option>
+                    <option value="apartment">Apartment Complex</option>
+                    <option value="villa">Villa Community</option>
+                    <option value="rowhouse">Row Houses</option>
+                    <option value="mixed">Mixed Development</option>
+                </select>
+            </div>
+
+            <h3>Chairman Details</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">Chairman Name</label>
+                    <input type="text" id="chairmanName" required>
+                </div>
+                <div class="form-group">
+                    <label class="required">Contact Number</label>
+                    <input type="tel" id="chairmanContact" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="required">Email Address</label>
+                <input type="email" id="chairmanEmail" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Register Society</button>
+        </form>
+        <div id="successMessage" class="success-message">
+            Registration successful! We will contact you shortly.
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('societyRegistrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('api/register_society.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    this.reset();
+                } else {
+                    alert('Registration failed. Please try again.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        // Basic form validation
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('invalid', function(e) {
+                e.preventDefault();
+                this.classList.add('invalid');
+            });
+
+            input.addEventListener('input', function() {
+                this.classList.remove('invalid');
+            });
+        });
+    </script>
+</body>
+</html>

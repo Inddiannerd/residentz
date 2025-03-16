@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login, Signup & Forgot Password</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #4003f8, #00b7ff);
+        }
+
+        .container {
+            width: 400px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 10px rgba(241, 4, 4, 0.2);
+            text-align: center;
+            border-left: 4px solid #4003f8;
+        }
+
+        h2 {
+            color: #000000;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-box {
+            margin: 10px 0;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            font-size: 16px;
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #100f10;
+        }
+
+        .input-box input::placeholder {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .input-box input:focus {
+            border-color: #4003f8;
+            box-shadow: 0 0 0 2px rgba(64, 3, 248, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #4003f8, #00b7ff);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(227, 14, 14, 0.2);
+        }
+
+        button:hover {
+            background: linear-gradient(-135deg, #4003f8, #00b7ff);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 183, 255, 0.3);
+        }
+
+        .links {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: #4003f8;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .message {
+            color: #00b7ff;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Login Form -->
+        <div id="loginForm">
+            <h2>User Login</h2>
+            <div class="input-box">
+                <input type="text" id="loginUsername" placeholder="Username" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="loginPassword" placeholder="Password" required>
+            </div>
+            <button onclick="login()">Login</button>
+            <div class="links">
+                <a onclick="showForm('forgotForm')">Forgot Password?</a><br>
+                <a onclick="showForm('signupForm')">Create an Account</a>
+            </div>
+            <p id="loginMessage" class="message"></p>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupForm" class="hidden">
+            <h2>Create an Account</h2>
+            <div class="input-box">
+                <input type="text" id="signupName" placeholder="Full Name" required>
+            </div>
+            <div class="input-box">
+                <input type="text" id="signupAddress" placeholder="Address" required>
+            </div>
+            <div class="input-box">
+                <input type="tel" id="signupPhone" placeholder="Phone Number" required>
+            </div>
+            <div class="input-box">
+                <input type="email" id="signupEmail" placeholder="Email" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="signupPassword" placeholder="Password" required>
+            </div>
+            <button onclick="signup()">Sign Up</button>
+            <div class="links">
+                <a onclick="showForm('loginForm')">Back to Login</a>
+            </div>
+            <p id="signupMessage" class="message"></p>
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div id="forgotForm" class="hidden">
+            <h2>Reset Password</h2>
+            <div class="input-box">
+                <input type="email" id="forgotEmail" placeholder="Enter your email" required>
+            </div>
+            <button onclick="forgotPassword()">Send Reset Link</button>
+            <div class="links">
+                <a onclick="showForm('loginForm')">Back to Login</a>
+            </div>
+            <p id="forgotMessage" class="message"></p>
+        </div>
+    </div>
+
+    <script>
+        function showForm(formId) {
+            document.getElementById("loginForm").classList.add("hidden");
+            document.getElementById("signupForm").classList.add("hidden");
+            document.getElementById("forgotForm").classList.add("hidden");
+
+            document.getElementById(formId).classList.remove("hidden");
+        }
+
+        function login() {
+            const username = document.getElementById("loginUsername").value;
+            const password = document.getElementById("loginPassword").value;
+            const loginMessage = document.getElementById("loginMessage");
+
+            if (username === "" && password === "") {
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = "index.html";
+            } else {
+                loginMessage.textContent = "Invalid username or password.";
+            }
+        }
+
+        function signup() {
+            const formData = {
+                name: document.getElementById("signupName").value,
+                email: document.getElementById("signupEmail").value,
+                password: document.getElementById("signupPassword").value,
+                mobile: document.getElementById("signupPhone").value,
+                gender: document.querySelector('input[name="gender"]:checked').value
+            };
+
+            // Validate according to database constraints
+            if (formData.name.length > 10) {
+                alert("Name must be 10 characters or less");
+                return;
+            }
+
+            if (formData.email.length > 15) {
+                alert("Email must be 15 characters or less");
+                return;
+            }
+
+            if (!/^\d+$/.test(formData.mobile) || formData.mobile.length > 10) {
+                alert("Mobile number must be numeric and 10 digits or less");
+                return;
+            }
+
+            if (!/^\d+$/.test(formData.password) || formData.password.length > 7) {
+                alert("Password must be numeric and 7 digits or less");
+                return;
+            }
+
+            if (formData.gender.length > 5) {
+                alert("Gender must be 5 characters or less");
+                return;
+            }
+        }
+
+        function forgotPassword() {
+            const email = document.getElementById("forgotEmail").value;
+            const forgotMessage = document.getElementById("forgotMessage");
+
+            if (email) {
+                forgotMessage.textContent = "A reset link has been sent to your email.";
+                setTimeout(() => showForm('loginForm'), 3000);
+            } else {
+                forgotMessage.textContent = "Please enter a valid email.";
+            }
+        }
+    </script>
+
+</body>
+</html>
