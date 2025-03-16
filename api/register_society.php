@@ -12,13 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([
             ':name' => $_POST['name'],
             ':email' => $_POST['email'],
-            ':mobile' => (int)$_POST['mobile'],  // Convert to INT for database
-            ':password' => (int)$_POST['password'] // Convert to INT for database
+            ':mobile' => (int)$_POST['mobile'],
+            ':password' => (int)$_POST['password']
         ]);
 
         echo json_encode(['success' => true]);
     } catch(PDOException $e) {
+        http_response_code(500);
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 }
-?>

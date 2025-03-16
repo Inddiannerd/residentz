@@ -135,7 +135,7 @@
                 <input type="text" id="signupName" placeholder="Name (max 10 characters)" maxlength="10" required>
             </div>
             <div class="input-box">
-                <input type="email" id="signupEmail" placeholder="Email (max 15 characters)" maxlength="15" required>
+                <input type="email" id="signupEmail" placeholder="Email" maxlength="50" required>
             </div>
             <div class="input-box">
                 <input type="number" id="signupPassword" placeholder="Password (7 digits)" maxlength="7" required>
@@ -181,16 +181,41 @@
         }
 
         function login() {
-            const username = document.getElementById("loginUsername").value;
+            const email = document.getElementById("loginUsername").value;
             const password = document.getElementById("loginPassword").value;
 
-            // Add validation here against your database
-            if (username && password) {
-                localStorage.setItem('isLoggedIn', 'true');
-                window.location.href = "index.html";
-            } else {
+            // Validate inputs
+            if (!email || !password) {
                 document.getElementById("loginMessage").textContent = "Please fill all fields";
+                return;
             }
+
+            // Send login request to server
+            fetch('auth/login.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('userName', data.userName);
+                    window.location.href = "index.html";
+                } else {
+                    document.getElementById("loginMessage").textContent = "Invalid email or password";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("loginMessage").textContent = "Login failed";
+            });
         }
 
         function signup() {
@@ -208,8 +233,8 @@
                 return;
             }
 
-            if (!formData.email || formData.email.length > 15) {
-                alert("Email is required and must be 15 characters or less");
+            if (!formData.email || formData.email.length > 50) {
+                alert("Email is required and must be 50 characters or less");
                 return;
             }
 

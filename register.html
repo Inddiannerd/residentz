@@ -144,7 +144,6 @@
 </head>
 <body>
     
-
     <nav>
         <div class="nav-left">
             <a href="index.html">Home</a>
@@ -237,6 +236,16 @@
     </div>
 
     <script>
+        window.onload = function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userId = localStorage.getItem('userId');
+            
+            if (!isLoggedIn || !userId) {
+                localStorage.clear();
+                window.location.href = 'LoginAndSignUp.html';
+            }
+        }
+
         document.getElementById('societyRegistrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             

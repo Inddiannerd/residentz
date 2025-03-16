@@ -25,17 +25,12 @@
             display: flex;
             justify-content: space-between;
             background: linear-gradient(to right, #030303fd, #1a1a1a);
-            padding: 1rem 2rem;
+            padding: 1rem;
             position: sticky;
             top: 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             z-index: 1000;
             width: 100%;
-        }
-
-        .nav-left, .nav-right {
-            display: flex;
-            align-items: center;
         }
         
         nav a {
@@ -44,6 +39,7 @@
             padding: 0.8rem 1.5rem;
             margin: 0 0.5rem;
             border-radius: 25px;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
         }
         
@@ -51,10 +47,6 @@
             background: linear-gradient(135deg, #4003f8, #00b7ff);
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 183, 255, 0.3);
-        }
-
-        #loginBtn {
-            background: linear-gradient(135deg, #4003f8, #00b7ff);
         }
         
         .about-container {
@@ -152,7 +144,10 @@
     <script>
         window.onload = function() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (!isLoggedIn) {
+            const userId = localStorage.getItem('userId');
+            
+            if (!isLoggedIn || !userId) {
+                localStorage.clear();
                 window.location.href = 'LoginAndSignUp.html';
             }
         }

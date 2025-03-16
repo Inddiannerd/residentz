@@ -110,8 +110,8 @@
         /* Add styles for the logged-in dashboard */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
             padding: 2rem;
             max-width: 1200px;
             margin: 0 auto;
@@ -119,23 +119,41 @@
 
         .dashboard-card {
             background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            text-align: center;
         }
 
         .dashboard-card:hover {
             transform: translateY(-5px);
-            border-left: 4px solid #00b7ff;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-left: 4px solid #4003f8;
         }
 
         .society-info {
-            background: #4003f8;
+            background: linear-gradient(135deg, #4003f8, #00b7ff);
             color: white;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem auto;
+            max-width: 1000px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .society-info h2 {
+            font-size: 2.5rem;
+            margin: 0;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .society-info p {
+            font-size: 1.2rem;
+            margin: 0;
+            opacity: 0.9;
         }
 
         #loginMessage {
@@ -161,19 +179,61 @@
             transform: translateX(10px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+
+        .pay-button {
+            background: linear-gradient(135deg, #4003f8, #00b7ff);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 80%;
+            max-width: 200px;
+        }
+
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 183, 255, 0.4);
+        }
+
+        #maintenanceDue {
+            font-weight: 600;
+            color: #4003f8;
+            font-size: 1.8rem;
+        }
+
+        #navRight a {
+            margin-left: 1rem;
+        }
+
+        #navRight a[onclick="showDashboard()"] {
+            background: linear-gradient(135deg, #4003f8, #00b7ff);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        #navRight a[onclick="showDashboard()"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 183, 255, 0.3);
+        }
     </style>
 </head>
 <body>
    
     <nav>
         <div class="nav-left">
-            <a href="index.html">Home</a>
+            <a href="#" onclick="showMainContent()">Home</a>
             <a href="about.html">About</a>
             <a href="services.html">Services</a>
             <a href="contact.html">Contact</a>
         </div>
-        <div class="nav-right">
+        <div class="nav-right" id="navRight">
             <a href="LoginAndSignUp.html" id="loginBtn">Login / Sign Up</a>
+            <!-- Dashboard link will be added after login -->
         </div>
     </nav>
 
@@ -237,40 +297,46 @@
 
         function checkAccess() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (!isLoggedIn) {
+            const userId = localStorage.getItem('userId');
+            
+            if (!isLoggedIn || !userId) {
+                localStorage.clear();
                 window.location.href = 'LoginAndSignUp.html';
             } else {
-                showLoggedInContent();
                 updateNavBar();
+                showMainContent();
+                loadUserData(userId);
             }
         }
 
         function updateNavBar() {
-            const loginBtn = document.getElementById('loginBtn');
-            loginBtn.innerHTML = 'Logout';
-            loginBtn.onclick = logout;
+            const navRight = document.getElementById('navRight');
+            navRight.innerHTML = `
+                <a href="#" onclick="showDashboard()">Your Society</a>
+                <a href="#" id="loginBtn" onclick="logout()">Logout</a>
+            `;
         }
 
-        function showLoggedInContent() {
+        function showMainContent() {
+            document.getElementById('defaultContent').style.display = 'block';
+            document.getElementById('loggedInContent').style.display = 'none';
+        }
+
+        function showDashboard() {
             document.getElementById('defaultContent').style.display = 'none';
             document.getElementById('loggedInContent').style.display = 'block';
-            document.getElementById('loginBtn').innerHTML = 'Logout';
-            document.getElementById('loginBtn').onclick = logout;
-
-            // Load society details - replace with actual API call
             loadSocietyDetails();
+        }
+
+        function loadSocietyDetails() {
+            document.getElementById('societyName').innerText = 'Your Society';
+            document.getElementById('societyAddress').innerText = 'Welcome to your digital society management dashboard';
+            document.getElementById('maintenanceDue').innerText = '5000';
         }
 
         function logout() {
             localStorage.removeItem('isLoggedIn');
             window.location.href = 'LoginAndSignUp.html';
-        }
-
-        function loadSocietyDetails() {
-            // Simulate loading society details - replace with actual API call
-            document.getElementById('societyName').innerText = 'Sample Society';
-            document.getElementById('societyAddress').innerText = 'Sample Address';
-            document.getElementById('maintenanceDue').innerText = '5000';
         }
 
         async function makePayment() {
@@ -297,6 +363,18 @@
             } else {
                 alert("Payment failed. Try again.");
             }
+        }
+
+        function loadUserData(userId) {
+            fetch(`api/user_data.php?id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('societyName').innerText = data.societyName;
+                        document.getElementById('societyAddress').innerText = data.address;
+                        document.getElementById('maintenanceDue').innerText = data.maintenanceDue;
+                    }
+                });
         }
 
         document.getElementById('contactForm').addEventListener('submit', function(event) {
