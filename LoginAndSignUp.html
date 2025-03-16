@@ -132,19 +132,23 @@
         <div id="signupForm" class="hidden">
             <h2>Create an Account</h2>
             <div class="input-box">
-                <input type="text" id="signupName" placeholder="Full Name" required>
+                <input type="text" id="signupName" placeholder="Name (max 10 characters)" maxlength="10" required>
             </div>
             <div class="input-box">
-                <input type="text" id="signupAddress" placeholder="Address" required>
+                <input type="email" id="signupEmail" placeholder="Email (max 15 characters)" maxlength="15" required>
             </div>
             <div class="input-box">
-                <input type="tel" id="signupPhone" placeholder="Phone Number" required>
+                <input type="number" id="signupPassword" placeholder="Password (7 digits)" maxlength="7" required>
             </div>
             <div class="input-box">
-                <input type="email" id="signupEmail" placeholder="Email" required>
+                <input type="number" id="signupPhone" placeholder="Mobile Number (10 digits)" maxlength="10" required>
             </div>
             <div class="input-box">
-                <input type="password" id="signupPassword" placeholder="Password" required>
+                <select id="signupGender" required>
+                    <option value="">Select Gender</option>
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                </select>
             </div>
             <button onclick="signup()">Sign Up</button>
             <div class="links">
@@ -179,13 +183,13 @@
         function login() {
             const username = document.getElementById("loginUsername").value;
             const password = document.getElementById("loginPassword").value;
-            const loginMessage = document.getElementById("loginMessage");
 
-            if (username === "" && password === "") {
+            // Add validation here against your database
+            if (username && password) {
                 localStorage.setItem('isLoggedIn', 'true');
                 window.location.href = "index.html";
             } else {
-                loginMessage.textContent = "Invalid username or password.";
+                document.getElementById("loginMessage").textContent = "Please fill all fields";
             }
         }
 
@@ -195,34 +199,56 @@
                 email: document.getElementById("signupEmail").value,
                 password: document.getElementById("signupPassword").value,
                 mobile: document.getElementById("signupPhone").value,
-                gender: document.querySelector('input[name="gender"]:checked').value
+                gender: document.getElementById("signupGender").value
             };
 
             // Validate according to database constraints
-            if (formData.name.length > 10) {
-                alert("Name must be 10 characters or less");
+            if (!formData.name || formData.name.length > 10) {
+                alert("Name is required and must be 10 characters or less");
                 return;
             }
 
-            if (formData.email.length > 15) {
-                alert("Email must be 15 characters or less");
+            if (!formData.email || formData.email.length > 15) {
+                alert("Email is required and must be 15 characters or less");
                 return;
             }
 
-            if (!/^\d+$/.test(formData.mobile) || formData.mobile.length > 10) {
-                alert("Mobile number must be numeric and 10 digits or less");
+            if (!formData.password || formData.password.length > 7 || !/^\d+$/.test(formData.password)) {
+                alert("Password must be numeric and maximum 7 digits");
                 return;
             }
 
-            if (!/^\d+$/.test(formData.password) || formData.password.length > 7) {
-                alert("Password must be numeric and 7 digits or less");
+            if (!formData.mobile || formData.mobile.length > 10 || !/^\d+$/.test(formData.mobile)) {
+                alert("Mobile number must be numeric and 10 digits");
                 return;
             }
 
-            if (formData.gender.length > 5) {
-                alert("Gender must be 5 characters or less");
+            if (!formData.gender || formData.gender.length > 5) {
+                alert("Please select a gender");
                 return;
             }
+
+            // Send data to server
+            fetch('auth/register.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("signupMessage").textContent = "Registration successful!";
+                    setTimeout(() => showForm('loginForm'), 2000);
+                } else {
+                    document.getElementById("signupMessage").textContent = data.error || "Registration failed";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("signupMessage").textContent = "An error occurred";
+            });
         }
 
         function forgotPassword() {

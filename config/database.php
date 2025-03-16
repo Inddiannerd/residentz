@@ -17,3 +17,4 @@ function getDBConnection() {
         die("Connection failed: " . $e->getMessage());
     }
 }
+?>

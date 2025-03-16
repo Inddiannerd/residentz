@@ -17,13 +17,19 @@
        
         nav {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             background: linear-gradient(to right, #030303fd, #1a1a1a);
-            padding: 1rem;
+            padding: 1rem 2rem;
             position: sticky;
             top: 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             z-index: 1000;
+            width: 100%;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
         }
 
         nav a {
@@ -38,6 +44,11 @@
         nav a:hover {
             background: linear-gradient(135deg, #4003f8, #00b7ff);
             transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 183, 255, 0.3);
+        }
+
+        #loginBtn {
+            background: linear-gradient(135deg, #4003f8, #00b7ff);
         }
 
         .registration-container {
@@ -135,10 +146,15 @@
     
 
     <nav>
-       <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="services.html">Services</a>
-        <a href="contact.html">Contact</a>
+        <div class="nav-left">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="services.html">Services</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-right">
+            <a href="LoginAndSignUp.html" id="loginBtn">Login / Sign Up</a>
+        </div>
     </nav>
 
     <div class="registration-container">
