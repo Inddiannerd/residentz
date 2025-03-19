@@ -8,12 +8,15 @@ html, body {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    max-width: 100%;
 }
 
 body {
     background-color: #f8f9fa;
     color: #333;
     min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 
@@ -185,17 +188,20 @@ button:hover {
 .services-container {
     max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .service-card {
     background: white;
     border-radius: 15px;
     padding: 2rem;
-    margin: 2rem 0;
-    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-    border-left: 4px solid transparent;
+    margin: 1rem 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .service-card:hover {
@@ -211,12 +217,21 @@ button:hover {
 
 .features-list {
     list-style: none;
-    padding: 1rem 0;
+    padding: 0;
+    margin: 1rem 0;
 }
 
 .features-list li {
     padding: 0.5rem 0;
-    color: #666;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.features-list li:before {
+    content: "•";
+    color: #4003f8;
+    position: absolute;
+    left: 0;
 }
 
 /* Complaints Styles */
@@ -280,22 +295,45 @@ button:hover {
 
 /* Contact Page Styles */
 .contact-container {
-    max-width: 800px;
-    margin: 8rem auto 2rem;
-    padding: 3rem;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 768px) {
+    .contact-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.map-container {
+    width: 100%;
+    height: 400px;
+    margin-top: 2rem;
+    grid-column: 1 / -1;
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
 }
 
 /* Coming Soon Section */
 .coming-soon {
-    background: white;
-    padding: 3rem;
+    background: #f8f9fa;
+    padding: 2rem;
     border-radius: 15px;
+    margin-top: 2rem;
     text-align: center;
-    margin-top: 3rem;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Home Page Specific Styles */
@@ -426,4 +464,24 @@ social-links a:hover {
         justify-content: center;
         margin: 0.5rem 0;
     }
+
+    .services-container {
+        padding: 1rem;
+    }
+    
+    .service-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Ensure all form elements respect container width */
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Fix iframe width */
+iframe {
+    max-width: 100%;
 }
