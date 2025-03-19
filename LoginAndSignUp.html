@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
-    <link rel="stylesheet" href="css/styles.css"><meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login, Signup & Forgot Password</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/demo-data.js"></script>
+    <script>
+    // Check if running on GitHub Pages
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    </script>
 </head>
 <body>
 
@@ -90,7 +94,17 @@
                 return;
             }
 
-            // Send login request to server
+            // Check for demo credentials first
+            if (email === "demo@example.com" && password === "1234567") {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userId', '1');
+                localStorage.setItem('userName', 'Demo User');
+                localStorage.setItem('societyId', '1');
+                window.location.href = "index.html";
+                return;
+            }
+
+            // If not demo, try regular login
             fetch('auth/login.php', {
                 method: 'POST',
                 headers: {
@@ -191,4 +205,3 @@
 
 </body>
 </html>
-

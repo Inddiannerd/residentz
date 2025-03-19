@@ -131,27 +131,52 @@
                 alert("No pending maintenance dues.");
                 return;
             }
-            // Send request to backend
-            const response = await fetch("http://localhost:5000/pay", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: "123", amount: amount }) // Replace with actual user ID
-            });
 
-            const data = await response.json();
+            // Demo mode
+            if (localStorage.getItem('userId') === '1') {
+                alert("Demo Mode: Payment simulation successful!");
+                document.getElementById('maintenanceDue').innerText = '0';
+                return;
+            }
 
-            if (data.clientSecret) {
-                const result = await stripe.redirectToCheckout({ sessionId: data.clientSecret });
+            // Real payment code
+            try {
+                const response = await fetch("http://localhost:5000/pay", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        userId: localStorage.getItem('userId'), 
+                        amount: amount 
+                    })
+                });
 
-                if (result.error) {
-                    alert(result.error.message);
+                const data = await response.json();
+                if (data.clientSecret) {
+                    const result = await stripe.redirectToCheckout({ 
+                        sessionId: data.clientSecret 
+                    });
+                    if (result.error) {
+                        alert(result.error.message);
+                    }
+                } else {
+                    alert("Payment failed. Try again.");
                 }
-            } else {
-                alert("Payment failed. Try again.");
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert("Payment failed. Please try again later.");
             }
         }
 
         function loadUserData(userId) {
+            // For demo/GitHub Pages
+            if (userId === '1') { // Demo user
+                document.getElementById('societyName').innerText = 'Demo Society';
+                document.getElementById('societyAddress').innerText = '123 Demo Street';
+                document.getElementById('maintenanceDue').innerText = '5000';
+                return;
+            }
+
+            // For local/production environment
             fetch(`api/user_data.php?id=${userId}`)
                 .then(response => response.json())
                 .then(data => {
