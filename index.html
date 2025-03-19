@@ -1,227 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Residentz - Society Management System</title>
-    <script src="https://js.stripe.com/v3/"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-            scroll-behavior: smooth;
-            color: #333;
-        }
-        nav {
-            display: flex;
-            justify-content: space-between;
-            padding: 1rem 2rem;
-        }
-        .nav-left, .nav-right {
-            display: flex;
-            align-items: center;
-        }
-        #loginBtn {
-            background: linear-gradient(135deg, #4003f8, #00b7ff);
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-        #loginBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 183, 255, 0.3);
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        nav a:hover {
-            background: linear-gradient(135deg, #4003f8, #00b7ff);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 183, 255, 0.3);
-        }
-        section {
-            padding: 50px;
-            text-align: center;
-        }
-        #home {
-            background: linear-gradient(135deg, #4003f8, #00b7ff);
-            color: white;
-            border-radius: 0;
-        }
-        #about, #services, #contact, #payment {
-            background: white;
-            margin: 2rem auto;
-            max-width: 1200px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        .pay-button {
-            background: #4003f8;
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-        .pay-button:hover {
-            background: #00b7ff;
-            transform: translateY(-2px);
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        ul li {
-            padding: 5px;
-            font-size: 18px;
-        }
-        input, textarea {
-            border: 2px solid #916E80;
-            border-radius: 8px;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
-            width: 100%;
-            max-width: 400px;
-        }
-        #contactForm button {
-            background: #6E8091;
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        #contactForm button:hover {
-            background: #80916E;
-            transform: translateY(-2px);
-        }
-        /* Add styles for the logged-in dashboard */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .dashboard-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            border-left: 4px solid #4003f8;
-        }
-
-        .society-info {
-            background: linear-gradient(135deg, #4003f8, #00b7ff);
-            color: white;
-            padding: 2rem;
-            border-radius: 20px;
-            margin: 2rem auto;
-            max-width: 1000px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .society-info h2 {
-            font-size: 2.5rem;
-            margin: 0;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .society-info p {
-            font-size: 1.2rem;
-            margin: 0;
-            opacity: 0.9;
-        }
-
-        #loginMessage {
-            text-align: center;
-            padding: 1rem;
-            background: #916E80;
-            color: white;
-            margin: 1rem 0;
-        }
-
-        /* Improve feature list styling */
-        #features ul li {
-            background: white;
-            margin: 10px auto;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            max-width: 500px;
-            transition: transform 0.3s ease;
-        }
-
-        #features ul li:hover {
-            transform: translateX(10px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .pay-button {
-            background: linear-gradient(135deg, #4003f8, #00b7ff);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 80%;
-            max-width: 200px;
-        }
-
-        .pay-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 183, 255, 0.4);
-        }
-
-        #maintenanceDue {
-            font-weight: 600;
-            color: #4003f8;
-            font-size: 1.8rem;
-        }
-
-        #navRight a {
-            margin-left: 1rem;
-        }
-
-        #navRight a[onclick="showDashboard()"] {
-            background: linear-gradient(135deg, #4003f8, #00b7ff);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-
-        #navRight a[onclick="showDashboard()"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 183, 255, 0.3);
-        }
-    </style>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Residentz - Society Management System</title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
 <body>
    
     <nav>
@@ -233,11 +19,10 @@
         </div>
         <div class="nav-right" id="navRight">
             <a href="LoginAndSignUp.html" id="loginBtn">Login / Sign Up</a>
-            <!-- Dashboard link will be added after login -->
         </div>
     </nav>
 
-    <!-- Default Content (Non-logged in) -->
+
     <div id="defaultContent">
         <section id="home">
             <h2>Welcome to Residentz</h2>
@@ -278,7 +63,9 @@
             <div class="dashboard-card">
                 <h3>Notice Board</h3>
                 <div id="notices">
-                    <!-- Notices will be populated here -->
+                    <p>Notice 1</p>
+                    <p>Notice 2</p>
+                    <p>Notice 3</p>
                 </div>
             </div>
 
@@ -290,7 +77,6 @@
     </div>
 
     <script>
-        // Check login status on page load
         window.onload = function() {
             checkAccess();
         }

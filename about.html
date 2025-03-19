@@ -3,119 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Residentz</title>
+    <title>Residentz - Your Page Title</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            background: linear-gradient(to right, #030303fd, #1a1a1a);
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 1000;
-            width: 100%;
-        }
-        
-        nav a {
-            color: white;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            margin: 0 0.5rem;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-        
-        nav a:hover {
-            background: linear-gradient(135deg, #4003f8, #00b7ff);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 183, 255, 0.3);
-        }
-        
-        .about-container {
-            max-width: 1200px;
-            margin-top: 8rem;
-            padding: 3rem;
-            background: linear-gradient(to bottom right, white, #f8f9fa);
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            border-left: 4px solid #4003f8;
-        }
-
-        .about-container h2 {
-            font-size: 2.8rem;
-            background: linear-gradient(135deg, #4003f8, #00b7ff);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .about-container p {
-            font-size: 1.4rem;
-            line-height: 1.8;
-            color: #555;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .social-links a {
-            width: 50px;
-            height: 50px;
-            background: #4003f8;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background: #00b7ff;
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            .about-container {
-                width: 95%;
-                padding: 2rem;
-            }
-
-            .about-container h2 {
-                font-size: 2rem;
-            }
-
-            .about-container p {
-                font-size: 1.2rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <nav>
@@ -125,8 +16,8 @@
             <a href="services.html">Services</a>
             <a href="contact.html">Contact</a>
         </div>
-        <div class="nav-right">
-            <a href="LoginAndSignUp.html" id="loginBtn">Login / Sign Up</a>
+        <div class="nav-right" id="navRight">
+            <!-- Login button will be replaced by script -->
         </div>
     </nav>
 
@@ -149,8 +40,28 @@
             if (!isLoggedIn || !userId) {
                 localStorage.clear();
                 window.location.href = 'LoginAndSignUp.html';
+            } else {
+                updateNavBar();
             }
+        }
+
+        function updateNavBar() {
+            const navRight = document.getElementById('navRight');
+            navRight.innerHTML = `
+                <a href="#" onclick="showDashboard()">Your Society</a>
+                <a href="#" onclick="logout()" id="loginBtn">Logout</a>
+            `;
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'LoginAndSignUp.html';
+        }
+
+        function showDashboard() {
+            window.location.href = 'index.html';
         }
     </script>
 </body>
 </html>
+
