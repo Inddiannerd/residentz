@@ -19,32 +19,37 @@ body {
     width: 100%;
 }
 
-
+/* Update Navigation Styles */
 nav {
     display: flex;
     justify-content: space-between;
     background: linear-gradient(to right, #030303fd, #1a1a1a);
-    padding: 1rem 2rem;
+    padding: 1rem;
     position: sticky;
     top: 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     z-index: 1000;
     width: 100%;
-    box-sizing: border-box; 
+    box-sizing: border-box;
+    flex-wrap: wrap;
 }
 
 .nav-left, .nav-right {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 nav a {
     color: white;
     text-decoration: none;
-    padding: 0.8rem 1.5rem;
-    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    margin: 0.2rem;
     border-radius: 25px;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    font-size: 0.9rem;
 }
 
 nav a:hover {
@@ -444,34 +449,97 @@ social-links a:hover {
     transform: translateY(-2px);
 }
 
+/* Mobile Responsive Updates */
 @media (max-width: 768px) {
-    .container {
-        width: 90%;
-        margin: 2rem auto;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
     nav {
         flex-direction: column;
-        padding: 1rem;
+        padding: 0.5rem;
     }
 
     .nav-left, .nav-right {
         width: 100%;
         justify-content: center;
-        margin: 0.5rem 0;
+        padding: 0.5rem 0;
     }
 
-    .services-container {
-        padding: 1rem;
-    }
-    
-    .service-card {
+    .container {
+        width: 90%;
+        margin: 1rem auto;
         padding: 1.5rem;
     }
+
+    .contact-container,
+    .services-container,
+    .about-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .service-card {
+        margin: 1rem 0;
+        padding: 1.5rem;
+    }
+
+    .input-box input,
+    .input-box select,
+    .form-group input,
+    .form-group textarea {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+    }
+
+    #home {
+        padding: 2rem 1rem;
+    }
+
+    #home h2 {
+        font-size: 1.8rem;
+    }
+
+    #features {
+        padding: 1.5rem;
+    }
+
+    .map-container {
+        height: 300px;
+    }
+}
+
+/* Fix for very small screens */
+@media (max-width: 360px) {
+    nav a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .about-container,
+    .contact-container {
+        margin: 1rem 0.5rem;
+        padding: 1rem;
+    }
+}
+
+/* Fix container widths */
+.services-container,
+.contact-container,
+.about-container {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 /* Ensure all form elements respect container width */
