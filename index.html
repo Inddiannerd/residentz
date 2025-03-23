@@ -2,11 +2,12 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Residentz - Society Management System</title>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="./css/styles.css">
     </head>
 <body>
    
@@ -49,36 +50,185 @@
         </div>
 
         <div class="dashboard-grid">
+            <!-- Maintenance Card -->
             <div class="dashboard-card">
                 <h3>Maintenance</h3>
                 <p>Current Due: ₹<span id="maintenanceDue">0</span></p>
                 <button class="pay-button" onclick="makePayment()">Pay Now</button>
             </div>
 
+            <!-- Complaints Card -->
             <div class="dashboard-card">
                 <h3>Complaints</h3>
-                <button onclick="window.location.href='complaints.html'" class="pay-button">Raise Complaint</button>
-            </div>
-
-            <div class="dashboard-card">
-                <h3>Notice Board</h3>
-                <div id="notices">
-                    <p>Notice 1</p>
-                    <p>Notice 2</p>
-                    <p>Notice 3</p>
+                <div id="complaintForm">
+                    <input type="text" id="complaintTitle" placeholder="Issue Title" maxlength="100">
+                    <textarea id="complaintDesc" placeholder="Describe your issue"></textarea>
+                    <button onclick="submitComplaint()" class="pay-button">Submit Complaint</button>
+                </div>
+                <div id="complaintsList">
+                    <!-- Complaints will be listed here -->
                 </div>
             </div>
 
+            <!-- Notice Board Card -->
+            <div class="dashboard-card">
+                <h3>Notice Board</h3>
+                <div id="notices">
+                    <!-- Notices will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Society Polls Card -->
             <div class="dashboard-card">
                 <h3>Society Polls</h3>
-                <button onclick="window.location.href='polls.html'" class="pay-button">View Polls</button>
+                <div id="pollsList">
+                    <!-- Active polls will be shown here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Polls Section -->
+        <div class="polls-section">
+            <h2>Active Polls</h2>
+            <div id="activePolls" class="polls-grid">
+                <!-- Polls will be inserted here -->
             </div>
         </div>
     </div>
 
     <script>
+        // State management variables
+        let pollData = {
+            1: {
+                votes: [12, 8, 15],
+                hasVoted: false,
+                selectedOption: null
+            },
+            2: {
+                votes: [20, 25, 18],
+                hasVoted: false,
+                selectedOption: null
+            }
+        };
+
+        let complaintsData = [];
+
+        // Initialize state from localStorage or default values
+        function initializeStorage() {
+            const savedPolls = localStorage.getItem('pollData');
+            const savedComplaints = localStorage.getItem('complaints');
+
+            if (savedPolls) {
+                pollData = JSON.parse(savedPolls);
+            } else {
+                localStorage.setItem('pollData', JSON.stringify(pollData));
+            }
+
+            if (savedComplaints) {
+                complaintsData = JSON.parse(savedComplaints);
+            }
+        }
+
+        // Update vote handling
+        function votePoll(pollId, optionIndex) {
+            if (pollData[pollId].hasVoted) {
+                alert('You have already voted on this poll!');
+                return;
+            }
+
+            pollData[pollId].votes[optionIndex]++;
+            pollData[pollId].hasVoted = true;
+            pollData[pollId].selectedOption = optionIndex;  // Track selected option
+            localStorage.setItem('pollData', JSON.stringify(pollData));
+
+            // Update display immediately
+            const pollCard = document.querySelector(`[data-poll-id="${pollId}"]`);
+            const options = pollCard.querySelectorAll('.poll-option');
+            
+            // Update all options
+            options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                const voteCount = opt.querySelector('.vote-count');
+                voteCount.textContent = `(${pollData[pollId].votes[idx]} votes)`;
+            });
+
+            // Highlight selected option
+            options[optionIndex].classList.add('selected');
+            
+            alert('Vote recorded successfully!');
+        }
+
+        // Update complaint handling
+        function submitComplaint() {
+            const title = document.getElementById('complaintTitle').value.trim();
+            const description = document.getElementById('complaintDesc').value.trim();
+            
+            if (!title || !description) {
+                alert('Please fill in all complaint fields');
+                return;
+            }
+
+            const complaint = {
+                id: Date.now(),
+                title: title,
+                description: description,
+                status: 'Pending',
+                date: new Date().toISOString().split('T')[0],
+                userId: localStorage.getItem('userId')
+            };
+
+            complaintsData.unshift(complaint);
+            localStorage.setItem('complaints', JSON.stringify(complaintsData));
+            
+            addComplaintToList(complaint);
+            
+            document.getElementById('complaintTitle').value = '';
+            document.getElementById('complaintDesc').value = '';
+            alert('Complaint submitted successfully!');
+        }
+
+        function toggleComplaintStatus(complaintId) {
+            const complaint = complaintsData.find(c => c.id === complaintId);
+            if (complaint) {
+                complaint.status = complaint.status === 'Pending' ? 'Resolved' : 'Pending';
+                localStorage.setItem('complaints', JSON.stringify(complaintsData));
+                loadComplaints();
+            }
+        }
+
+        // Update display functions
+        function displayPolls(polls) {
+            const pollsContainer = document.getElementById('activePolls');
+            pollsContainer.innerHTML = polls.map(poll => `
+                <div class="poll-card" data-poll-id="${poll.id}">
+                    <h3 class="poll-title">${poll.title}</h3>
+                    <p>${poll.description}</p>
+                    <div class="poll-options">
+                        ${poll.options.map((option, index) => {
+                            const currentVotes = pollData[poll.id].votes[index];
+                            const isSelected = pollData[poll.id].selectedOption === index;
+                            return `
+                                <div class="poll-option ${isSelected ? 'selected' : ''}" onclick="votePoll(${poll.id}, ${index})">
+                                    <span>${option}</span>
+                                    <span class="vote-count">(${currentVotes} votes)</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="poll-meta">
+                        <span>Ends: ${new Date(poll.endDate).toLocaleDateString()}</span>
+                        <span>Total Votes: ${pollData[poll.id].votes.reduce((a, b) => a + b, 0)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update window.onload
         window.onload = function() {
+            initializeStorage();
             checkAccess();
+            loadPolls();
+            loadComplaints();
         }
 
         function checkAccess() {
@@ -92,6 +242,7 @@
                 updateNavBar();
                 showMainContent();
                 loadUserData(userId);
+                loadPolls();
             }
         }
 
@@ -188,6 +339,97 @@
                 });
         }
 
+        function loadPolls() {
+            const userId = localStorage.getItem('userId');
+            if (userId === '1') { // Demo mode
+                const demoPolls = [
+                    {
+                        id: 1,
+                        title: "Garden Area Renovation",
+                        description: "Choose the preferred design for garden renovation",
+                        options: ["Modern Design", "Traditional Design", "Eco-friendly Design"],
+                        votes: [12, 8, 15],
+                        endDate: "2024-04-01"
+                    },
+                    {
+                        id: 2,
+                        title: "Society Event Planning",
+                        description: "Select the next community event",
+                        options: ["Cultural Night", "Sports Day", "Food Festival"],
+                        votes: [20, 25, 18],
+                        endDate: "2024-04-15"
+                    }
+                ];
+                displayPolls(demoPolls);
+                return;
+            }
+
+            // For production environment
+            fetch('api/polls.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayPolls(data.polls);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function submitComplaint() {
+            const title = document.getElementById('complaintTitle').value.trim();
+            const description = document.getElementById('complaintDesc').value.trim();
+            
+            if (!title || !description) {
+                alert('Please fill in all complaint fields');
+                return;
+            }
+
+            const complaint = {
+                title: title,
+                description: description,
+                date: new Date().toISOString().split('T')[0],
+                userId: localStorage.getItem('userId')
+            };
+
+            saveComplaint(complaint);
+            addComplaintToList(complaint);
+            
+            document.getElementById('complaintTitle').value = '';
+            document.getElementById('complaintDesc').value = '';
+            alert('Complaint submitted successfully!');
+        }
+
+        function addComplaintToList(complaint) {
+            const complaintsList = document.getElementById('complaintsList');
+            const complaintElement = document.createElement('div');
+            complaintElement.className = 'complaint-item';
+            complaintElement.innerHTML = `
+                <h4>${complaint.title}</h4>
+                <p>${complaint.description}</p>
+                <span class="status ${complaint.status.toLowerCase()}">${complaint.status}</span>
+                <span class="date">${complaint.date}</span>
+                <button onclick="toggleComplaintStatus(${complaint.id})" class="status-toggle">
+                    ${complaint.status === 'Pending' ? 'Mark as Resolved' : 'Mark as Pending'}
+                </button>
+            `;
+            complaintsList.prepend(complaintElement);
+        }
+
+        function toggleComplaintStatus(complaintId) {
+            const complaints = JSON.parse(localStorage.getItem('complaints'));
+            const complaint = complaints.find(c => c.id === complaintId);
+            const newStatus = complaint.status === 'Pending' ? 'Resolved' : 'Pending';
+            updateComplaintStatus(complaintId, newStatus);
+            loadComplaints(); // Refresh the list
+        }
+
+        function loadComplaints() {
+            const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+            const complaintsList = document.getElementById('complaintsList');
+            complaintsList.innerHTML = '';
+            complaints.forEach(complaint => addComplaintToList(complaint));
+        }
+
         document.getElementById('contactForm').addEventListener('submit', function(event) {
             event.preventDefault();
             let name = document.getElementById('name').value;
@@ -201,6 +443,41 @@
                 document.getElementById('response').innerHTML = 'Please fill all fields!';
             }
         });
+
+        function initializeStorage() {
+            if (!localStorage.getItem('complaints')) {
+                localStorage.setItem('complaints', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('pollVotes')) {
+                localStorage.setItem('pollVotes', JSON.stringify({}));
+            }
+        }
+
+        function saveComplaint(complaint) {
+            const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+            complaint.id = Date.now();
+            complaint.status = 'Pending';
+            complaints.push(complaint);
+            localStorage.setItem('complaints', JSON.stringify(complaints));
+        }
+
+        function updateComplaintStatus(complaintId, status) {
+            const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+            const complaint = complaints.find(c => c.id === complaintId);
+            if (complaint) {
+                complaint.status = status;
+                localStorage.setItem('complaints', JSON.stringify(complaints));
+            }
+        }
+
+        function savePollVote(pollId, optionIndex) {
+            const pollVotes = JSON.parse(localStorage.getItem('pollVotes') || '{}');
+            if (!pollVotes[pollId]) {
+                pollVotes[pollId] = Array(3).fill(0);
+            }
+            pollVotes[pollId][optionIndex]++;
+            localStorage.setItem('pollVotes', JSON.stringify(pollVotes));
+        }
     </script>
 
 </body>

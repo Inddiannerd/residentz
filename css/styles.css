@@ -664,6 +664,23 @@ iframe {
     color: #999;
 }
 
+.status-toggle {
+    background: #4003f8;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-left: 1rem;
+    transition: all 0.3s ease;
+}
+
+.status-toggle:hover {
+    background: #00b7ff;
+    transform: translateY(-2px);
+}
+
 /* Polls Section Improvements */
 .poll-option {
     justify-content: space-between;
